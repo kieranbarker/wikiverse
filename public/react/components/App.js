@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import { PagesList } from './PagesList'
+import React, { useCallback, useEffect, useState } from 'react';
+import apiURL from '../api';
 
-// import and prepend the api url to any fetch calls
-import apiURL from '../api'
-
-export const App = () => {
+const App = () => {
   const [pages, setPages] = useState([])
 
-  useEffect(() => {
-    async function fetchPages () {
-      try {
-        const response = await fetch(`${apiURL}/wiki`)
-        const pagesData = await response.json()
-        setPages(pagesData)
-      } catch (err) {
-        console.log('Oh no an error! ', err)
-      }
-    }
-
-    fetchPages()
+  // Wrapped function in useCallback instead of useEffect because we will need
+  // to call it outside the Effect later after making POST requests.
+  const fetchPages = useCallback(async () => {
+    const response = await fetch(`${apiURL}/wiki`)
+    const pages = await response.json()
+    setPages(pages)
   }, [])
+
+  useEffect(() => {
+    fetchPages()
+  }, [fetchPages])
 
   return (
 		<main>
-      <h1>WikiVerse</h1>
-			<h2>An interesting 📚</h2>
-			<PagesList pages={pages} />
+      <h1 className="title">Wikiverse</h1>
+			<p className="subtitle">
+        An interesting <span aria-label="library">📚</span>
+      </p>
+			<ul className="pageList">
+        {pages.map((page) => (
+          <li className="pageList-item" key={page.id}>{page.title}</li>
+        ))}
+      </ul>
 		</main>
   )
 }
+
+export default App

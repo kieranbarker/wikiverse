@@ -4,8 +4,7 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'standard',
-    'plugin:react/recommended'
+    'react-app'
   ],
   overrides: [
     {
@@ -29,7 +28,5 @@ module.exports = {
   ],
   rules: {
     'react/prop-types': 'off',
-    'no-tabs': ['error', { allowIndentationTabs: true }],
-    indent: 'off'
   }
 }
